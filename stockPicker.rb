@@ -1,8 +1,5 @@
 def stock_picker (stocks)
-    extrem_days = {
-        cheapest_day: 0,
-        dearest_day: 0
-    }
+    cheapest_day = 0
 
     best = {
         buy_day: 0,
@@ -12,15 +9,17 @@ def stock_picker (stocks)
     best[:income] = stocks[best[:sell_day]] - stocks[best[:buy_day]]
 
     stocks.each_with_index do |price, day|
-        if price < stocks[extrem_days[:cheapest_day]] then extrem_days[:cheapest_day] = day end
-        if price > stocks[extrem_days[:dearest_day]] then extrem_days[:dearest_day] = day end
-        if best[:income] < stocks[extrem_days[:dearest_day]] - stocks[extrem_days[:cheapest_day]]
-            best[:buy_day] = extrem_days[:cheapest_day]
-            best[:sell_day] = extrem_days[:dearest_day]
-            best[:income] = best[:sell_day] - best[:buy_day] 
+        if price < stocks[cheapest_day]
+            cheapest_day = day
         end
-        p best[:income]
+
+        if best[:income] < price - stocks[cheapest_day]
+            best[:buy_day] = cheapest_day
+            best[:sell_day] = day
+            best[:income] = stocks[best[:sell_day]] - stocks[best[:buy_day]]
+        end
     end
+    [best[:buy_day], best[:sell_day]]
 end
 
-stock_picker([1,2,3])
+print stock_picker([17,3,6,9,15,8,6,1,10])
